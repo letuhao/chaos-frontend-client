@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chaos World - Welcome</title>
+</head>
+<body>
+    <!-- Welcome Scene Container -->
+    <div id="welcome-scene" class="welcome-scene">
+        <!-- Background -->
+        <div id="welcome-background" class="welcome-background">
+            <div class="background-particles"></div>
+            <div class="background-gradient"></div>
+        </div>
+        
+        <!-- Welcome Modal -->
+        <div id="welcome-modal" class="welcome-modal">
+            <!-- Welcome Section -->
+            <div id="welcome-section" class="auth-section">
+                <div class="welcome-header">
+                    <h1 class="game-title">Chaos World</h1>
+                    <p class="game-subtitle">A Cultivation RPG Adventure</p>
+                </div>
+                
+                <div class="welcome-content">
+                    <div class="game-features">
+                        <div class="feature-item">
+                            <div class="feature-icon">⚔️</div>
+                            <h3>Epic Combat</h3>
+                            <p>Master powerful cultivation techniques</p>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">🧘</div>
+                            <h3>Cultivation</h3>
+                            <p>Break through realms and ascend to immortality</p>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">🌍</div>
+                            <h3>Vast World</h3>
+                            <p>Explore mystical lands and ancient secrets</p>
+                        </div>
+                    </div>
+                    
+                    <div class="welcome-actions">
+                        <button id="show-login-btn" class="btn btn-primary">Login</button>
+                        <button id="show-register-btn" class="btn btn-secondary">Register</button>
+                        <button id="guest-play-btn" class="btn btn-outline">Play as Guest</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Login Section -->
+            <div id="login-section" class="auth-section" style="display: none;">
+                <div class="auth-header">
+                    <h2>Welcome Back</h2>
+                    <p>Sign in to continue your cultivation journey</p>
+                </div>
+                
+                <form id="login-form" class="auth-form">
+                    <div class="form-group">
+                        <label for="login-username">Username or Email</label>
+                        <input type="text" id="login-username" name="username" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="login-password">Password</label>
+                        <input type="password" id="login-password" name="password" required>
+                    </div>
+                    
+                    <div class="form-options">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="rememberMe">
+                            <span class="checkmark"></span>
+                            Remember me
+                        </label>
+                        <a href="#" class="forgot-password">Forgot password?</a>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary btn-full">Login</button>
+                </form>
+                
+                <div id="auth-mode-toggle" class="auth-mode-toggle"></div>
+                
+                <button id="back-to-welcome-btn" class="btn btn-outline btn-back">← Back to Welcome</button>
+            </div>
+            
+            <!-- Register Section -->
+            <div id="register-section" class="auth-section" style="display: none;">
+                <div class="auth-header">
+                    <h2>Join the Cultivation World</h2>
+                    <p>Create your account and begin your journey</p>
+                </div>
+                
+                <form id="register-form" class="auth-form">
+                    <div class="form-group">
+                        <label for="register-username">Username</label>
+                        <input type="text" id="register-username" name="username" required minlength="3" maxlength="20">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="register-email">Email</label>
+                        <input type="email" id="register-email" name="email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="register-password">Password</label>
+                        <input type="password" id="register-password" name="password" required minlength="6">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="register-confirm-password">Confirm Password</label>
+                        <input type="password" id="register-confirm-password" name="confirmPassword" required>
+                    </div>
+                    
+                    <div class="form-options">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="agreeToTerms" required>
+                            <span class="checkmark"></span>
+                            I agree to the <a href="#" class="terms-link">Terms of Service</a> and <a href="#" class="privacy-link">Privacy Policy</a>
+                        </label>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary btn-full">Create Account</button>
+                </form>
+                
+                <div id="auth-mode-toggle" class="auth-mode-toggle"></div>
+                
+                <button id="back-to-welcome-btn" class="btn btn-outline btn-back">← Back to Welcome</button>
+            </div>
+        </div>
+        
+        <!-- Message Display -->
+        <div id="auth-message" class="auth-message" style="display: none;"></div>
+    </div>
+    
+    <!-- Game UI (hidden initially) -->
+    <div id="game-ui" class="game-ui" style="display: none;">
+        <!-- This will contain the main game interface -->
+        <div class="game-container">
+            <h1>Game UI - Coming Soon</h1>
+            <p>Welcome to Chaos World!</p>
+            <button id="logout-btn" class="btn">Logout</button>
+        </div>
+    </div>
+    
+    <!-- Scripts will be injected by webpack -->
+</body>
+</html>

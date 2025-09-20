@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chaos World - Cultivation RPG</title>
+    
+    <!-- Meta tags for SEO and social sharing -->
+    <meta name="description" content="A cultivation RPG inspired by Tale of Immortal. Build your character, cultivate your way to immortality, and explore a vast world of adventure.">
+    <meta name="keywords" content="cultivation, rpg, game, unity, webgl, steam, tale of immortal">
+    <meta name="author" content="Chaos World Studio">
+    
+    <!-- Open Graph tags for social sharing -->
+    <meta property="og:title" content="Chaos World - Cultivation RPG">
+    <meta property="og:description" content="A cultivation RPG inspired by Tale of Immortal. Build your character, cultivate your way to immortality, and explore a vast world of adventure.">
+    <meta property="og:image" content="https://chaos-world-game.com/images/og-image.jpg">
+    <meta property="og:url" content="https://chaos-world-game.com">
+    <meta property="og:type" content="website">
+    
+    <!-- Twitter Card tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Chaos World - Cultivation RPG">
+    <meta name="twitter:description" content="A cultivation RPG inspired by Tale of Immortal. Build your character, cultivate your way to immortality, and explore a vast world of adventure.">
+    <meta name="twitter:image" content="https://chaos-world-game.com/images/twitter-image.jpg">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    
+    <!-- Preload critical resources -->
+    <link rel="preload" href="Build/UnityLoader.js" as="script">
+    <link rel="preload" href="Build/chaos-world.wasm" as="fetch" crossorigin>
+    <link rel="preload" href="Build/chaos-world.data" as="fetch" crossorigin>
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/mobile.css">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="loading-screen">
+        <div class="loading-logo">混沌世界</div>
+        <div class="loading-progress-container">
+            <div id="loading-progress" class="loading-progress-bar"></div>
+        </div>
+        <div id="loading-text" class="loading-text">Loading... 0%</div>
+    </div>
+    
+    <!-- Game Container -->
+    <div class="game-container">
+        <!-- Unity WebGL Canvas -->
+        <canvas id="unity-canvas" class="unity-canvas"></canvas>
+        
+        <!-- HTML UI Overlay -->
+        <div class="html-ui">
+            <!-- Character Stats Panel -->
+            <div id="character-stats" class="character-stats ui-element">
+                <h3>Character Stats</h3>
+                <div class="stat-row">
+                    <span class="stat-label">Level:</span>
+                    <span class="stat-value" id="player-level">1</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Health:</span>
+                    <div class="stat-bar">
+                        <div class="stat-fill health-fill" id="health-fill" style="width: 100%"></div>
+                    </div>
+                    <span class="stat-value" id="health-text">100/100</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Mana:</span>
+                    <div class="stat-bar">
+                        <div class="stat-fill mana-fill" id="mana-fill" style="width: 100%"></div>
+                    </div>
+                    <span class="stat-value" id="mana-text">50/50</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Experience:</span>
+                    <span class="stat-value" id="experience-text">0</span>
+                </div>
+            </div>
+            
+            <!-- Cultivation Panel -->
+            <div id="cultivation-panel" class="cultivation-panel ui-element">
+                <h3>Cultivation Progress</h3>
+                <div class="realm-info">
+                    <span class="realm-name" id="current-realm">Qi Refining</span>
+                    <span class="realm-level" id="realm-level">Level 1</span>
+                </div>
+                <div class="progress-container">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="cultivation-progress" style="width: 0%"></div>
+                    </div>
+                    <span class="progress-text" id="progress-text">0%</span>
+                </div>
+                <button class="cultivate-btn" id="cultivate-btn">Cultivate</button>
+            </div>
+            
+            <!-- Inventory Button -->
+            <button id="inventory-btn" class="ui-element" style="position: absolute; top: 20px; right: 20px; padding: 10px 20px; background: rgba(0,0,0,0.8); color: white; border: 2px solid #333; border-radius: 5px; cursor: pointer;">
+                Inventory (I)
+            </button>
+            
+            <!-- Settings Button -->
+            <button id="settings-btn" class="ui-element" style="position: absolute; top: 20px; right: 120px; padding: 10px 20px; background: rgba(0,0,0,0.8); color: white; border: 2px solid #333; border-radius: 5px; cursor: pointer;">
+                Settings
+            </button>
+        </div>
+        
+        <!-- Inventory Modal -->
+        <div id="inventory-modal" class="inventory-modal">
+            <div class="inventory-content">
+                <div class="inventory-header">
+                    <h2>Inventory</h2>
+                    <button class="close-btn" id="close-inventory">&times;</button>
+                </div>
+                <div class="inventory-grid" id="inventory-grid">
+                    <!-- Items will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- Combat UI -->
+        <div id="combat-ui" class="combat-ui">
+            <div class="combat-header">
+                <div class="combat-title">Combat</div>
+                <div class="combat-actions">
+                    <button class="combat-btn" id="attack-btn">Attack</button>
+                    <button class="combat-btn" id="defend-btn">Defend</button>
+                    <button class="combat-btn" id="technique-btn">Technique</button>
+                    <button class="combat-btn" id="item-btn">Item</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Notification Container -->
+        <div id="notification-container"></div>
+    </div>
+    
+    <!-- Unity WebGL Loader -->
+    <script src="Build/UnityLoader.js"></script>
+    
+    <!-- Game Scripts -->
+    <script type="module" src="js/game-ui.js"></script>
+    
+    <!-- Service Worker Registration -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(registration => {
+                        console.log('SW registered: ', registration);
+                    })
+                    .catch(registrationError => {
+                        console.log('SW registration failed: ', registrationError);
+                    });
+            });
+        }
+    </script>
+    
+    <!-- Analytics -->
+    <script>
+        // Google Analytics
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+        
+        ga('create', 'GA_MEASUREMENT_ID', 'auto');
+        ga('send', 'pageview');
+    </script>
+</body>
+</html>

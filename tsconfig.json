@@ -1,0 +1,49 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "strict": true,
+    "noImplicitAny": false,
+    "noImplicitReturns": false,
+    "noImplicitThis": false,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "outDir": "./builds/webgl/static/js",
+    "rootDir": "./web-assets/src",
+    "baseUrl": "./web-assets/src",
+    "paths": {
+      "@/*": ["*"],
+      "@js/*": ["js/*"],
+      "@css/*": ["css/*"],
+      "@assets/*": ["assets/*"],
+      "@types/*": ["types/*"]
+    },
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "allowJs": true,
+    "checkJs": false,
+    "noEmit": false,
+    "isolatedModules": true,
+    "resolveJsonModule": true
+  },
+  "include": [
+    "web-assets/src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "builds",
+    "unity-project",
+    "**/*.test.ts",
+    "**/*.spec.ts"
+  ],
+  "ts-node": {
+    "esm": true
+  }
+}

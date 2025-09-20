@@ -1,0 +1,568 @@
+/**
+ * Chaos World - Main CSS
+ * Base styles for the cultivation RPG game
+ */
+
+/* CSS Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    overflow: hidden;
+    font-family: 'Arial', 'Microsoft YaHei', '微软雅黑', sans-serif;
+    background: #000;
+    color: #fff;
+}
+
+/* Game Container */
+.game-container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* Unity Canvas */
+.unity-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+/* HTML UI Overlay */
+.html-ui {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 10;
+}
+
+.ui-element {
+    pointer-events: auto;
+}
+
+/* Loading Screen */
+.loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #1a1a2e, #16213e);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.loading-logo {
+    font-size: 3rem;
+    font-weight: bold;
+    color: #ffd700;
+    margin-bottom: 2rem;
+    text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+}
+
+.loading-progress-container {
+    width: 300px;
+    height: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 1rem;
+}
+
+.loading-progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #ff6b6b, #ffd700, #4ecdc4);
+    width: 0%;
+    transition: width 0.3s ease;
+}
+
+.loading-text {
+    color: #ccc;
+    font-size: 1.1rem;
+}
+
+/* Character Stats Panel */
+.character-stats {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: rgba(0, 0, 0, 0.8);
+    border: 2px solid #333;
+    border-radius: 10px;
+    padding: 15px;
+    min-width: 250px;
+    backdrop-filter: blur(10px);
+}
+
+.character-stats h3 {
+    color: #ffd700;
+    margin-bottom: 15px;
+    font-size: 1.2rem;
+    text-align: center;
+}
+
+.stat-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.stat-label {
+    font-weight: bold;
+    margin-right: 10px;
+    min-width: 80px;
+    color: #ccc;
+}
+
+.stat-bar {
+    flex: 1;
+    height: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-right: 10px;
+    position: relative;
+}
+
+.stat-fill {
+    height: 100%;
+    transition: width 0.3s ease;
+    position: relative;
+}
+
+.health-fill {
+    background: linear-gradient(90deg, #ff6b6b, #ff8e8e);
+}
+
+.mana-fill {
+    background: linear-gradient(90deg, #4ecdc4, #44a08d);
+}
+
+.stat-value {
+    font-weight: bold;
+    min-width: 60px;
+    text-align: right;
+    color: #fff;
+}
+
+/* Cultivation Panel */
+.cultivation-panel {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    background: linear-gradient(135deg, #1a1a2e, #16213e);
+    border: 2px solid #333;
+    border-radius: 15px;
+    padding: 20px;
+    min-width: 300px;
+    backdrop-filter: blur(10px);
+}
+
+.cultivation-panel h3 {
+    color: #ffd700;
+    margin-bottom: 15px;
+    font-size: 1.2rem;
+    text-align: center;
+}
+
+.realm-info {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.realm-name {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #ffd700;
+}
+
+.realm-level {
+    font-size: 0.9rem;
+    color: #ccc;
+}
+
+.progress-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.progress-bar {
+    flex: 1;
+    height: 25px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-right: 10px;
+    position: relative;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #ff6b6b, #ffd700, #4ecdc4);
+    transition: width 0.5s ease;
+    position: relative;
+}
+
+.progress-text {
+    font-weight: bold;
+    color: #fff;
+    min-width: 50px;
+    text-align: right;
+}
+
+.cultivate-btn {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.cultivate-btn:hover {
+    background: linear-gradient(45deg, #ff5252, #ff7979);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);
+}
+
+.cultivate-btn:active {
+    transform: translateY(0);
+}
+
+/* Inventory System */
+.inventory-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: none;
+    z-index: 1000;
+    backdrop-filter: blur(5px);
+}
+
+.inventory-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #1a1a2e;
+    border: 2px solid #333;
+    border-radius: 15px;
+    padding: 20px;
+    max-width: 600px;
+    max-height: 80vh;
+    overflow-y: auto;
+    width: 90%;
+}
+
+.inventory-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #333;
+}
+
+.inventory-header h2 {
+    color: #ffd700;
+    font-size: 1.5rem;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    color: #ccc;
+    font-size: 2rem;
+    cursor: pointer;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.close-btn:hover {
+    color: #fff;
+}
+
+.inventory-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.inventory-item {
+    background: #16213e;
+    border: 2px solid #333;
+    border-radius: 8px;
+    padding: 10px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.inventory-item:hover {
+    border-color: #ffd700;
+    transform: scale(1.05);
+    box-shadow: 0 5px 15px rgba(255, 215, 0, 0.2);
+}
+
+.inventory-item.rare {
+    border-color: #ff6b6b;
+}
+
+.inventory-item.epic {
+    border-color: #9c27b0;
+}
+
+.inventory-item.legendary {
+    border-color: #ffd700;
+}
+
+.item-icon {
+    width: 40px;
+    height: 40px;
+    background: #444;
+    border-radius: 4px;
+    margin: 0 auto 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+
+.item-name {
+    font-size: 0.8rem;
+    color: white;
+    margin-bottom: 2px;
+    font-weight: bold;
+}
+
+.item-quantity {
+    font-size: 0.7rem;
+    color: #ccc;
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 2px 4px;
+    border-radius: 3px;
+}
+
+/* Combat UI */
+.combat-ui {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
+    background: rgba(0, 0, 0, 0.9);
+    border: 2px solid #333;
+    border-radius: 15px;
+    padding: 20px;
+    display: none;
+    backdrop-filter: blur(10px);
+}
+
+.combat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.combat-title {
+    color: #ff6b6b;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.combat-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.combat-btn {
+    padding: 8px 16px;
+    background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.combat-btn:hover {
+    background: linear-gradient(45deg, #ff5252, #ff7979);
+    transform: translateY(-2px);
+}
+
+.combat-btn:disabled {
+    background: #666;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Notifications */
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: rgba(0, 0, 0, 0.9);
+    border: 2px solid #333;
+    border-radius: 10px;
+    padding: 15px 20px;
+    color: white;
+    font-weight: bold;
+    z-index: 2000;
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.notification.show {
+    transform: translateX(0);
+}
+
+.notification.success {
+    border-color: #4caf50;
+    background: rgba(76, 175, 80, 0.1);
+}
+
+.notification.error {
+    border-color: #f44336;
+    background: rgba(244, 67, 54, 0.1);
+}
+
+.notification.warning {
+    border-color: #ff9800;
+    background: rgba(255, 152, 0, 0.1);
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .character-stats {
+        top: 10px;
+        left: 10px;
+        right: 10px;
+        min-width: auto;
+        padding: 10px;
+    }
+    
+    .cultivation-panel {
+        bottom: 10px;
+        left: 10px;
+        right: 10px;
+        min-width: auto;
+        padding: 15px;
+    }
+    
+    .inventory-content {
+        width: 95%;
+        padding: 15px;
+    }
+    
+    .inventory-grid {
+        grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+        gap: 8px;
+    }
+    
+    .combat-ui {
+        left: 10px;
+        right: 10px;
+        bottom: 10px;
+        padding: 15px;
+    }
+    
+    .combat-actions {
+        gap: 8px;
+    }
+    
+    .combat-btn {
+        padding: 6px 12px;
+        font-size: 0.9rem;
+    }
+}
+
+/* Touch-friendly adjustments */
+@media (hover: none) and (pointer: coarse) {
+    .inventory-item {
+        min-height: 80px;
+    }
+    
+    .combat-btn {
+        min-height: 44px;
+        min-width: 44px;
+    }
+    
+    .cultivate-btn {
+        min-height: 44px;
+    }
+}
+
+/* Loading animation */
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+.loading-pulse {
+    animation: pulse 2s infinite;
+}
+
+/* Fade animations */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+    animation: fadeIn 0.3s ease;
+}
+
+/* Slide animations */
+@keyframes slideInRight {
+    from { transform: translateX(100%); }
+    to { transform: translateX(0); }
+}
+
+.slide-in-right {
+    animation: slideInRight 0.3s ease;
+}
+
+@keyframes slideOutRight {
+    from { transform: translateX(0); }
+    to { transform: translateX(100%); }
+}
+
+.slide-out-right {
+    animation: slideOutRight 0.3s ease;
+}

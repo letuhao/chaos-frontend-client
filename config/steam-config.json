@@ -1,0 +1,65 @@
+{
+  "steam": {
+    "appId": "YOUR_STEAM_APP_ID",
+    "webApiKey": "YOUR_STEAM_WEB_API_KEY",
+    "communityUrl": "https://steamcommunity.com",
+    "storeUrl": "https://store.steampowered.com",
+    "apiUrl": "https://api.steampowered.com"
+  },
+  "achievements": [
+    {
+      "id": "first_cultivation",
+      "name": "First Steps",
+      "description": "Begin your cultivation journey",
+      "hidden": false,
+      "icon": "achievement_first_cultivation.png"
+    },
+    {
+      "id": "realm_breakthrough",
+      "name": "Realm Breaker",
+      "description": "Break through to a new cultivation realm",
+      "hidden": false,
+      "icon": "achievement_realm_breakthrough.png"
+    },
+    {
+      "id": "immortal_ascension",
+      "name": "Immortal Ascension",
+      "description": "Reach the highest cultivation realm",
+      "hidden": true,
+      "icon": "achievement_immortal_ascension.png"
+    },
+    {
+      "id": "master_combatant",
+      "name": "Master Combatant",
+      "description": "Win 100 battles",
+      "hidden": false,
+      "icon": "achievement_master_combatant.png"
+    },
+    {
+      "id": "treasure_hunter",
+      "name": "Treasure Hunter",
+      "description": "Collect 50 rare artifacts",
+      "hidden": false,
+      "icon": "achievement_treasure_hunter.png"
+    }
+  ],
+  "cloudSaves": {
+    "enabled": true,
+    "maxSaves": 10,
+    "autoSave": true,
+    "autoSaveInterval": 300,
+    "saveFileName": "chaos_world_save.json"
+  },
+  "friends": {
+    "enabled": true,
+    "showOnlineFriends": true,
+    "showFriendsPlayingGame": true,
+    "maxFriendsDisplay": 20
+  },
+  "webgl": {
+    "enableSteamOverlay": false,
+    "enableSteamInput": false,
+    "enableSteamController": false,
+    "fallbackToCustomOverlay": true
+  }
+}

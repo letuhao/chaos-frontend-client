@@ -1,0 +1,76 @@
+{
+  "buildSettings": {
+    "targetPlatform": "WebGL",
+    "developmentBuild": false,
+    "scriptDebugging": false,
+    "compressionFormat": "Gzip",
+    "dataCaching": true,
+    "exceptionSupport": "Full",
+    "codeStrippingLevel": "Minimal",
+    "managedStrippingLevel": "Minimal"
+  },
+  "playerSettings": {
+    "companyName": "Chaos World Studio",
+    "productName": "Chaos World",
+    "version": "0.1.0",
+    "bundleVersion": "1",
+    "defaultScreenWidth": 1920,
+    "defaultScreenHeight": 1080,
+    "runInBackground": true,
+    "captureSingleScreen": false,
+    "usePlayerLog": true,
+    "stripEngineCode": false
+  },
+  "webglSettings": {
+    "memorySize": 512,
+    "wasmStreaming": true,
+    "wasmCodegen": true,
+    "wasmExceptionSupport": true,
+    "wasmFunctionReferences": true,
+    "wasmSimd": true,
+    "wasmBulkMemory": true,
+    "wasmMultiValue": true,
+    "wasmReferenceTypes": true,
+    "wasmSignExt": true,
+    "wasmTailCall": true,
+    "wasmThreads": false,
+    "wasmGc": false
+  },
+  "qualitySettings": {
+    "pixelLightCount": 1,
+    "textureQuality": 0.5,
+    "anisotropicFiltering": 0,
+    "antiAliasing": 0,
+    "softVegetation": false,
+    "realtimeReflectionProbes": false,
+    "billboardsFaceCameraPosition": false,
+    "vSyncCount": 0,
+    "lodBias": 1.0,
+    "maximumLODLevel": 0,
+    "particleRaycastBudget": 256,
+    "asyncUploadTimeSlice": 2,
+    "asyncUploadBufferSize": 16,
+    "asyncUploadPersistentBuffer": true,
+    "resolutionScalingFixedDPIFactor": 1.0,
+    "renderScale": 1.0
+  },
+  "mobileOptimization": {
+    "enableMobileOptimization": true,
+    "targetFramerate": 30,
+    "maxTextureSize": 512,
+    "textureCompression": "DXT1",
+    "audioCompression": "Vorbis",
+    "audioQuality": 0.5,
+    "particleSystemBudget": 100,
+    "maxParticleCount": 1000
+  },
+  "steamIntegration": {
+    "enableSteam": true,
+    "steamAppId": "YOUR_STEAM_APP_ID",
+    "steamWebApiKey": "YOUR_STEAM_WEB_API_KEY",
+    "enableAchievements": true,
+    "enableCloudSaves": true,
+    "enableFriends": true,
+    "enableOverlay": false
+  }
+}
