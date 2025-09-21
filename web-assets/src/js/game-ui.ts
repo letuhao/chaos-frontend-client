@@ -15,7 +15,9 @@ import { CultivationPanel } from './ui/cultivation-panel';
 import { InventorySystem } from './ui/inventory-system';
 import { CombatUI } from './ui/combat-ui';
 import { WelcomeScene } from './ui/welcome-scene';
+import { UserProfileComponent } from './ui/user-profile';
 import { GameState, PlayerData, UnityEvent, SteamEvent, EventHandler, AuthFormData, UserProfile } from '../types/game-types';
+import { apiService } from './services/api-service';
 
 class GameUI {
     private unityBridge: UnityBridge | null = null;
@@ -26,6 +28,7 @@ class GameUI {
     private inventorySystem: InventorySystem | null = null;
     private combatUI: CombatUI | null = null;
     private welcomeScene: WelcomeScene | null = null;
+    private userProfile: UserProfileComponent | null = null;
     
     private isInitialized: boolean = false;
     private isAuthenticated: boolean = false;
@@ -66,12 +69,23 @@ class GameUI {
             // Initialize welcome scene first
             this.welcomeScene = new WelcomeScene();
             
-            // Check if user is already authenticated
-            const savedUser = this.getSavedUser();
-            if (savedUser) {
-                this.currentUser = savedUser;
-                this.isAuthenticated = true;
-                this.showGameUI();
+            // Check if user is already authenticated via API service
+            if (apiService.isAuthenticated()) {
+                try {
+                    // Verify token is still valid by fetching current user
+                    const response = await apiService.getCurrentUser();
+                    if (response.success) {
+                        this.currentUser = apiService.convertToUserProfile(response.user);
+                        this.isAuthenticated = true;
+                        this.showGameUI();
+                    } else {
+                        // Token is invalid, show welcome scene
+                        this.showWelcomeScene();
+                    }
+                } catch (error) {
+                    console.warn('Failed to verify authentication:', error);
+                    this.showWelcomeScene();
+                }
             } else {
                 this.showWelcomeScene();
             }
@@ -90,6 +104,7 @@ class GameUI {
             this.cultivationPanel = new CultivationPanel(this.gameState.player);
             this.inventorySystem = new InventorySystem();
             this.combatUI = new CombatUI();
+            this.userProfile = new UserProfileComponent();
             
             // Setup event listeners
             this.setupEventListeners();
@@ -153,6 +168,15 @@ class GameUI {
         document.addEventListener('keydown', (event: KeyboardEvent) => {
             this.handleKeyboardShortcuts(event);
         });
+        
+        // Game UI controls
+        const userProfileBtn = document.getElementById('user-profile-btn');
+        const logoutBtn = document.getElementById('logout-btn');
+        const closeProfileBtn = document.getElementById('close-profile-btn');
+        
+        userProfileBtn?.addEventListener('click', () => this.showUserProfile());
+        logoutBtn?.addEventListener('click', () => this.logout());
+        closeProfileBtn?.addEventListener('click', () => this.hideUserProfile());
     }
     
     private updatePlayerStats(data: Partial<PlayerData>): void {
@@ -313,19 +337,8 @@ class GameUI {
     }
     
     // Method called by welcome scene when user logs in
-    onUserLogin(authData: AuthFormData): void {
-        console.log('User logged in:', authData.username);
-        
-        // Create user profile (in a real app, this would come from the server)
-        const userProfile: UserProfile = {
-            id: `user_${Date.now()}`,
-            username: authData.username,
-            email: authData.email || '',
-            displayName: authData.username,
-            level: 1,
-            joinDate: new Date(),
-            lastLogin: new Date()
-        };
+    onUserLogin(userProfile: UserProfile): void {
+        console.log('User logged in:', userProfile.username);
         
         this.currentUser = userProfile;
         this.isAuthenticated = true;
@@ -356,14 +369,21 @@ class GameUI {
     }
     
     // Public methods for external access
-    logout(): void {
-        this.currentUser = null;
-        this.isAuthenticated = false;
-        this.clearSavedUser();
-        this.showWelcomeScene();
-        
-        // Notify Unity about logout
-        this.unityBridge?.sendToUnity('UserLogout', '');
+    async logout(): Promise<void> {
+        try {
+            // Call backend logout API
+            await apiService.logout();
+        } catch (error) {
+            console.warn('Logout API call failed:', error);
+        } finally {
+            this.currentUser = null;
+            this.isAuthenticated = false;
+            this.clearSavedUser();
+            this.showWelcomeScene();
+            
+            // Notify Unity about logout
+            this.unityBridge?.sendToUnity('UserLogout', '');
+        }
     }
     
     getCurrentUser(): UserProfile | null {
@@ -372,6 +392,25 @@ class GameUI {
     
     isUserAuthenticated(): boolean {
         return this.isAuthenticated;
+    }
+    
+    // User profile management
+    showUserProfile(): void {
+        if (this.currentUser && this.userProfile) {
+            this.userProfile.show(this.currentUser);
+        }
+    }
+    
+    hideUserProfile(): void {
+        if (this.userProfile) {
+            this.userProfile.hide();
+        }
+    }
+    
+    toggleUserProfile(): void {
+        if (this.userProfile) {
+            this.userProfile.toggle();
+        }
     }
 }
 

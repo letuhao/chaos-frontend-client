@@ -256,6 +256,7 @@ export interface AuthFormData {
     password: string;
     confirmPassword?: string;
     email?: string;
+    displayName?: string;
     rememberMe?: boolean;
     agreeToTerms?: boolean;
     isGuest?: boolean;
@@ -271,6 +272,65 @@ export interface UserProfile {
     level: number;
     joinDate: Date;
     lastLogin?: Date;
+}
+
+// Backend API Types
+export interface LoginRequest {
+    username: string;
+    password: string;
+    rememberMe?: boolean;
+}
+
+export interface RegisterRequest {
+    username: string;
+    email: string;
+    password: string;
+    confirmPassword: string;
+    displayName: string;
+    agreeToTerms: boolean;
+}
+
+export interface AuthResponse {
+    success: boolean;
+    user: {
+        id: string;
+        username: string;
+        email: string;
+        display_name: string;
+        avatar_url?: string;
+        status: string;
+        email_verified: boolean;
+        created_at: string;
+        updated_at: string;
+        last_login?: string;
+    };
+    tokens: {
+        access_token: string;
+        refresh_token: string;
+        expires_in: number;
+    };
+}
+
+export interface UserProfileResponse {
+    success: boolean;
+    user: {
+        id: string;
+        username: string;
+        email: string;
+        display_name: string;
+        avatar_url?: string;
+        status: string;
+        email_verified: boolean;
+        created_at: string;
+        updated_at: string;
+        last_login?: string;
+    };
+}
+
+export interface ErrorResponse {
+    success: false;
+    error: string;
+    details?: string;
 }
 
 // Event Handler Types

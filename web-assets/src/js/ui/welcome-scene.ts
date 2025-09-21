@@ -3,7 +3,8 @@
  * Handles the welcome/login/register scene
  */
 
-import { AuthFormData, AuthMode } from '../../types/game-types';
+import { AuthFormData, AuthMode, LoginRequest, RegisterRequest } from '../../types/game-types';
+import { apiService } from '../services/api-service';
 
 export class WelcomeScene {
     private elements: {
@@ -34,18 +35,26 @@ export class WelcomeScene {
     }
     
     private setupEventListeners(): void {
-        // Mode toggle buttons
-        const loginBtn = document.getElementById('show-login-btn');
-        const registerBtn = document.getElementById('show-register-btn');
-        const guestBtn = document.getElementById('guest-play-btn');
-        const backToWelcomeLoginBtn = document.getElementById('back-to-welcome-login');
-        const backToWelcomeRegisterBtn = document.getElementById('back-to-welcome-register');
-        
-        loginBtn?.addEventListener('click', () => this.setMode('login'));
-        registerBtn?.addEventListener('click', () => this.setMode('register'));
-        guestBtn?.addEventListener('click', () => this.handleGuestLogin());
-        backToWelcomeLoginBtn?.addEventListener('click', () => this.setMode('welcome'));
-        backToWelcomeRegisterBtn?.addEventListener('click', () => this.setMode('welcome'));
+        // Use event delegation for better reliability
+        document.addEventListener('click', (e) => {
+            const target = e.target as HTMLElement;
+            
+            // Mode toggle buttons
+            if (target.id === 'show-login-btn') {
+                e.preventDefault();
+                this.setMode('login');
+            } else if (target.id === 'show-register-btn') {
+                e.preventDefault();
+                this.setMode('register');
+            } else if (target.id === 'guest-play-btn') {
+                e.preventDefault();
+                this.handleGuestLogin();
+            } else if (target.id === 'back-to-welcome-login' || target.id === 'back-to-welcome-register') {
+                e.preventDefault();
+                console.log('Back button clicked, returning to welcome screen');
+                this.setMode('welcome');
+            }
+        });
         
         // Form submissions
         const loginForm = document.getElementById('login-form') as HTMLFormElement;
@@ -79,7 +88,7 @@ export class WelcomeScene {
     show(): void {
         this.isVisible = true;
         if (this.elements.container) {
-            this.elements.container.style.display = 'block';
+            this.elements.container.classList.add('show');
         }
         this.setMode('welcome');
     }
@@ -87,7 +96,7 @@ export class WelcomeScene {
     hide(): void {
         this.isVisible = false;
         if (this.elements.container) {
-            this.elements.container.style.display = 'none';
+            this.elements.container.classList.remove('show');
         }
     }
     
@@ -129,6 +138,10 @@ export class WelcomeScene {
         
         // Re-setup event listeners for dynamically created links
         this.setupModeToggleLinks();
+        
+        // Ensure back buttons work by re-attaching listeners
+        this.setupBackButtons();
+        
     }
     
     private updateSectionVisibility(sectionId: string, visible: boolean): void {
@@ -152,6 +165,26 @@ export class WelcomeScene {
             this.setMode('login');
         });
     }
+    
+    private setupBackButtons(): void {
+        const backToWelcomeLoginBtn = document.getElementById('back-to-welcome-login');
+        const backToWelcomeRegisterBtn = document.getElementById('back-to-welcome-register');
+        
+        // Remove existing listeners to avoid duplicates
+        backToWelcomeLoginBtn?.removeEventListener('click', this.handleBackToWelcome);
+        backToWelcomeRegisterBtn?.removeEventListener('click', this.handleBackToWelcome);
+        
+        // Add new listeners
+        backToWelcomeLoginBtn?.addEventListener('click', this.handleBackToWelcome);
+        backToWelcomeRegisterBtn?.addEventListener('click', this.handleBackToWelcome);
+    }
+    
+    private handleBackToWelcome = (e: Event): void => {
+        e.preventDefault();
+        console.log('Back button clicked, returning to welcome screen');
+        this.setMode('welcome');
+    }
+    
     
     private setupSocialLoginButtons(): void {
         // Login social buttons
@@ -274,34 +307,54 @@ export class WelcomeScene {
             password: formData.get('password') as string,
             confirmPassword: formData.get('confirmPassword') as string,
             email: formData.get('email') as string,
+            displayName: formData.get('displayName') as string,
             agreeToTerms: formData.get('agreeToTerms') === 'on'
         };
         
         this.performRegister(authData);
     }
     
-    private performLogin(authData: AuthFormData): void {
+    private async performLogin(authData: AuthFormData): Promise<void> {
         console.log('Attempting login:', authData.username);
         
         // Show loading state
         this.setFormLoading('login', true);
         
-        // Simulate API call (replace with actual API call later)
-        setTimeout(() => {
-            this.setFormLoading('login', false);
+        try {
+            // Convert to backend format
+            const loginRequest: LoginRequest = {
+                username: authData.username,
+                password: authData.password,
+                rememberMe: authData.rememberMe
+            };
+
+            // Call backend API
+            const response = await apiService.login(loginRequest);
             
-            // For now, just show success and hide welcome scene
-            this.showMessage('Login successful!', 'success');
-            this.hide();
-            
-            // Notify game UI that user is logged in
-            if (window.gameUI) {
-                window.gameUI.onUserLogin(authData);
+            if (response.success) {
+                this.setFormLoading('login', false);
+                this.showMessage('Login successful!', 'success');
+                this.hide();
+                
+                // Convert backend user to frontend format
+                const userProfile = apiService.convertToUserProfile(response.user);
+                
+                // Notify game UI that user is logged in
+                if (window.gameUI) {
+                    window.gameUI.onUserLogin(userProfile);
+                }
+            } else {
+                this.setFormLoading('login', false);
+                this.showMessage('Login failed. Please check your credentials.', 'error');
             }
-        }, 1500);
+        } catch (error: any) {
+            this.setFormLoading('login', false);
+            this.showMessage(error.message || 'Login failed. Please try again.', 'error');
+            console.error('Login error:', error);
+        }
     }
     
-    private performRegister(authData: AuthFormData): void {
+    private async performRegister(authData: AuthFormData): Promise<void> {
         console.log('Attempting registration:', authData.username);
         
         // Validate passwords match
@@ -310,17 +363,50 @@ export class WelcomeScene {
             return;
         }
         
+        // Validate required fields
+        if (!authData.email || !authData.agreeToTerms) {
+            this.showMessage('Please fill in all required fields and agree to terms', 'error');
+            return;
+        }
+        
         // Show loading state
         this.setFormLoading('register', true);
         
-        // Simulate API call (replace with actual API call later)
-        setTimeout(() => {
-            this.setFormLoading('register', false);
+        try {
+            // Convert to backend format
+            const registerRequest: RegisterRequest = {
+                username: authData.username,
+                email: authData.email,
+                password: authData.password,
+                confirmPassword: authData.confirmPassword!,
+                displayName: authData.displayName || authData.username,
+                agreeToTerms: authData.agreeToTerms!
+            };
+
+            // Call backend API
+            const response = await apiService.register(registerRequest);
             
-            // For now, just show success and switch to login
-            this.showMessage('Registration successful! Please login.', 'success');
-            this.setMode('login');
-        }, 2000);
+            if (response.success) {
+                this.setFormLoading('register', false);
+                this.showMessage('Registration successful! You are now logged in.', 'success');
+                this.hide();
+                
+                // Convert backend user to frontend format
+                const userProfile = apiService.convertToUserProfile(response.user);
+                
+                // Notify game UI that user is logged in
+                if (window.gameUI) {
+                    window.gameUI.onUserLogin(userProfile);
+                }
+            } else {
+                this.setFormLoading('register', false);
+                this.showMessage('Registration failed. Please try again.', 'error');
+            }
+        } catch (error: any) {
+            this.setFormLoading('register', false);
+            this.showMessage(error.message || 'Registration failed. Please try again.', 'error');
+            console.error('Registration error:', error);
+        }
     }
     
     private setFormLoading(formType: 'login' | 'register', loading: boolean): void {

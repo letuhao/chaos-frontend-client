@@ -130,6 +130,11 @@
                     </div>
                     
                     <div class="form-group">
+                        <label for="register-display-name">Display Name</label>
+                        <input type="text" id="register-display-name" name="displayName" required minlength="2" maxlength="30">
+                    </div>
+                    
+                    <div class="form-group">
                         <label for="register-email">Email</label>
                         <input type="email" id="register-email" name="email" required>
                     </div>
@@ -198,14 +203,50 @@
     
     <!-- Game UI (hidden initially) -->
     <div id="game-ui" class="game-ui" style="display: none;">
-        <!-- This will contain the main game interface -->
+        <!-- Game Header -->
+        <div class="game-header">
+            <div class="game-logo">
+                <h1>Chaos World</h1>
+            </div>
+            <div class="game-controls">
+                <button id="user-profile-btn" class="btn btn-outline">
+                    <i class="icon-user"></i> Profile
+                </button>
+                <button id="logout-btn" class="btn btn-outline">
+                    <i class="icon-logout"></i> Logout
+                </button>
+            </div>
+        </div>
+        
+        <!-- Main Game Container -->
         <div class="game-container">
-            <h1>Game UI - Coming Soon</h1>
-            <p>Welcome to Chaos World!</p>
+            <h2>Welcome to Chaos World!</h2>
+            <p>Your cultivation journey begins here...</p>
+            
+            <!-- Game content will be added here -->
+            <div class="game-content">
+                <div class="character-info">
+                    <h3>Character Status</h3>
+                    <p>Level: 1</p>
+                    <p>Realm: Qi Refining</p>
+                </div>
+            </div>
         </div>
     </div>
     
-    <!-- Scripts -->
-    <script src="../../js/game-ui.js"></script>
+    <!-- User Profile Modal -->
+    <div id="user-profile" class="user-profile-modal" style="display: none;">
+        <div id="profile-modal" class="profile-modal">
+            <div class="profile-header">
+                <h2>User Profile</h2>
+                <button id="close-profile-btn" class="btn-close">&times;</button>
+            </div>
+            <div id="user-info" class="user-info">
+                <!-- User profile content will be dynamically generated -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- Scripts injected by HtmlWebpackPlugin -->
 </body>
 </html>

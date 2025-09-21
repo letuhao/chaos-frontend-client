@@ -73,33 +73,6 @@ module.exports = (env, argv) => {
       ]
     },
     
-    plugins: [
-      new CleanWebpackPlugin(),
-      
-      new HtmlWebpackPlugin({
-        template: './web-assets/src/html/welcome.html',
-        filename: 'index.html',
-        chunks: ['game-ui', 'unity-bridge', 'steam-integration'],
-        minify: isProduction ? {
-          removeComments: true,
-          collapseWhitespace: true,
-          removeRedundantAttributes: true,
-          useShortDoctype: true,
-          removeEmptyAttributes: true,
-          removeStyleLinkTypeAttributes: true,
-          keepClosingSlash: true,
-          minifyJS: true,
-          minifyCSS: true,
-          minifyURLs: true
-        } : false
-      }),
-      
-      ...(isProduction ? [
-        new MiniCssExtractPlugin({
-          filename: 'static/css/[name].[contenthash].css'
-        })
-      ] : [])
-    ],
     
     devServer: {
       compress: true,
@@ -107,36 +80,53 @@ module.exports = (env, argv) => {
       hot: true,
       open: true,
       historyApiFallback: {
-        index: '/index.html'
+        index: '/index.html',
+        disableDotRule: true
       },
       devMiddleware: {
-        writeToDisk: true,
-        publicPath: '/'
-      },
-      static: {
-        directory: path.join(__dirname, 'builds/webgl'),
         publicPath: '/',
-        serveIndex: true,
-        watch: true
+        writeToDisk: true,
+        index: 'index.html'
+      },
+      static: false,
+      setupMiddlewares: (middlewares, devServer) => {
+        if (!devServer) {
+          throw new Error('webpack-dev-server is not defined');
+        }
+        // Avoid Chrome DevTools probing path causing noisy 404s
+        devServer.app.get('/.well-known/appspecific/com.chrome.devtools.json', (req, res) => {
+          res.setHeader('Content-Type', 'application/json');
+          res.status(200).send(JSON.stringify({ ok: true }));
+        });
+        return middlewares;
       },
       headers: {
         'Cross-Origin-Embedder-Policy': 'require-corp',
-        'Cross-Origin-Opener-Policy': 'same-origin'
+        'Cross-Origin-Opener-Policy': 'same-origin',
+        // Relaxed CSP for development to allow HMR and local requests
+        'Content-Security-Policy': [
+          "default-src 'self'",
+          "connect-src 'self' http://localhost:3200 ws://localhost:3200",
+          "script-src 'self' 'unsafe-eval' 'unsafe-inline'",
+          "style-src 'self' 'unsafe-inline'",
+          "img-src 'self' data: blob:",
+          "font-src 'self' data:",
+          "worker-src 'self' blob:",
+          "media-src 'self' blob:",
+          "frame-ancestors 'self'"
+        ].join('; ')
       },
-      // Debug options
       client: {
-        logging: 'verbose',
+        logging: 'info',
         overlay: {
           errors: true,
           warnings: false,
         },
       },
       onListening: function(devServer) {
-        if (!devServer) {
-          throw new Error('webpack-dev-server is not defined');
-        }
-        console.log('🚀 Dev server is running on http://localhost:3200');
-        console.log('📁 Serving files from:', path.join(__dirname, 'builds/webgl'));
+        const addr = devServer.server.address();
+        console.log(`🚀 Dev server listening on http://localhost:${addr.port}`);
+        console.log('📄 History API fallback to /index.html (from webpack output)');
       }
     },
     
@@ -161,7 +151,44 @@ module.exports = (env, argv) => {
         '@js': path.resolve(__dirname, 'web-assets/src/js'),
         '@assets': path.resolve(__dirname, 'web-assets/src/assets'),
         '@types': path.resolve(__dirname, 'web-assets/src/types')
+      },
+      fallback: {
+        "process": require.resolve("process/browser")
       }
-    }
+    },
+    
+    plugins: [
+      new CleanWebpackPlugin(),
+      
+      // Define process for browser
+      new (require('webpack')).DefinePlugin({
+        'process.env': JSON.stringify(process.env)
+      }),
+      
+      new HtmlWebpackPlugin({
+        template: './web-assets/src/html/welcome.html',
+        filename: 'index.html',
+        inject: 'body',
+        chunks: ['game-ui', 'unity-bridge', 'steam-integration'],
+        minify: isProduction ? {
+          removeComments: true,
+          collapseWhitespace: true,
+          removeRedundantAttributes: true,
+          useShortDoctype: true,
+          removeEmptyAttributes: true,
+          removeStyleLinkTypeAttributes: true,
+          keepClosingSlash: true,
+          minifyJS: true,
+          minifyCSS: true,
+          minifyURLs: true
+        } : false
+      }),
+      
+      ...(isProduction ? [
+        new MiniCssExtractPlugin({
+          filename: 'static/css/[name].[contenthash].css'
+        })
+      ] : [])
+    ],
   };
 };

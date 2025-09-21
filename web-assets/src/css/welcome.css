@@ -7,6 +7,14 @@
     height: 100%;
     z-index: 1000;
     display: none;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.welcome-scene.show {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .welcome-background {
@@ -57,11 +65,8 @@
 }
 
 .welcome-modal {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 90%;
+    position: relative;
+    width: 100%;
     max-width: 500px;
     background: rgba(255, 255, 255, 0.95);
     border-radius: 20px;
@@ -70,22 +75,32 @@
     border: 1px solid rgba(255, 255, 255, 0.2);
     overflow: hidden;
     animation: modalSlideIn 0.5s ease-out;
+    max-height: calc(100vh - 100px);
+    display: flex;
+    flex-direction: column;
+    margin: 20px;
 }
 
 @keyframes modalSlideIn {
     from {
         opacity: 0;
-        transform: translate(-50%, -60%);
+        transform: translateY(-20px);
     }
     to {
         opacity: 1;
-        transform: translate(-50%, -50%);
+        transform: translateY(0);
     }
 }
 
 .auth-section {
-    padding: 40px;
+    padding: 15px;
     text-align: center;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 0;
+    overflow-y: auto;
 }
 
 .welcome-header {
@@ -260,8 +275,8 @@
 }
 
 .auth-mode-toggle {
-    margin: 20px 0;
-    padding: 15px;
+    /* margin: 20px 0; */
+    /* padding: 15px; */
     background: rgba(255, 255, 255, 0.5);
     border-radius: 10px;
     border: 1px solid rgba(255, 255, 255, 0.3);
@@ -335,11 +350,314 @@
     background: transparent;
     color: #666;
     border: 1px solid #ddd;
+    cursor: pointer;
+    position: relative;
+    z-index: 10;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
 }
 
 .btn-back:hover {
     background: #f5f5f5;
     color: #333;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Ensure back button is visible and centered in both login and register sections */
+#login-section .btn-back,
+#register-section .btn-back {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    margin: 15px auto 0 auto;
+    width: auto;
+    min-width: 150px;
+    text-align: center;
+}
+
+/* Make register section more compact to prevent window scroll */
+#register-section {
+    padding: 10px 15px;
+}
+
+#register-section .auth-header {
+    margin-bottom: 20px;
+}
+
+#register-section .form-group {
+    margin-bottom: 12px;
+}
+
+#register-section .social-buttons {
+    margin: 15px 0;
+}
+
+#register-section .btn-back {
+    margin: 10px auto 0 auto;
+}
+
+/* Extra compact for small screens */
+@media (max-height: 700px) {
+    #register-section {
+        padding: 8px 12px;
+    }
+    
+    #register-section .auth-header {
+        margin-bottom: 15px;
+    }
+    
+    #register-section .form-group {
+        margin-bottom: 10px;
+    }
+    
+    #register-section .social-buttons {
+        margin: 12px 0;
+    }
+    
+    #register-section .btn-back {
+        margin: 8px auto 0 auto;
+    }
+}
+
+/* Responsive Design - Mobile First */
+@media (max-width: 768px) {
+    .welcome-modal {
+        margin: 15px;
+        max-height: calc(100vh - 60px);
+        border-radius: 15px;
+    }
+    
+    .auth-section {
+        padding: 12px;
+    }
+    
+    .game-title {
+        font-size: 2.2rem;
+        margin-bottom: 20px;
+    }
+    
+    .auth-header h2 {
+        font-size: 1.6rem;
+        margin-bottom: 20px;
+    }
+    
+    .auth-header p {
+        font-size: 0.9rem;
+        margin-bottom: 25px;
+    }
+    
+    .form-group {
+        margin-bottom: 15px;
+    }
+    
+    .form-group input {
+        padding: 12px 15px;
+        font-size: 16px; /* Prevents zoom on iOS */
+    }
+    
+    .btn {
+        padding: 12px 20px;
+        font-size: 16px;
+        margin: 8px 0;
+    }
+    
+    .btn-back {
+        margin: 10px auto 0 auto;
+        padding: 10px 20px;
+        font-size: 14px;
+        text-align: center;
+        display: block !important;
+    }
+    
+    .social-buttons {
+        flex-direction: column;
+        gap: 10px;
+        margin: 20px 0;
+    }
+    
+    .btn-social {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .feature-list {
+        grid-template-columns: 1fr;
+        gap: 15px;
+        margin: 20px 0;
+    }
+    
+    .feature-item {
+        padding: 15px;
+        text-align: center;
+    }
+    
+    .feature-item h3 {
+        font-size: 1.1rem;
+        margin-bottom: 8px;
+    }
+    
+    .feature-item p {
+        font-size: 0.85rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .welcome-modal {
+        margin: 10px;
+        max-height: calc(100vh - 40px);
+        border-radius: 10px;
+    }
+    
+    .auth-section {
+        padding: 8px;
+    }
+    
+    .game-title {
+        font-size: 1.8rem;
+        margin-bottom: 15px;
+    }
+    
+    .auth-header h2 {
+        font-size: 1.4rem;
+        margin-bottom: 15px;
+    }
+    
+    .auth-header p {
+        font-size: 0.85rem;
+        margin-bottom: 20px;
+    }
+    
+    .form-group input {
+        padding: 10px 12px;
+        font-size: 16px;
+    }
+    
+    .btn {
+        padding: 10px 16px;
+        font-size: 14px;
+        margin: 6px 0;
+    }
+    
+    .btn-back {
+        margin: 8px auto 0 auto;
+        padding: 8px 16px;
+        font-size: 13px;
+        text-align: center;
+        display: block !important;
+    }
+    
+    .social-buttons {
+        margin: 15px 0;
+    }
+    
+    .feature-list {
+        margin: 15px 0;
+    }
+    
+    .feature-item {
+        padding: 12px;
+    }
+}
+
+/* Small height screens (iPhone SE, etc.) */
+@media (max-height: 700px) {
+    .welcome-modal {
+        max-height: calc(100vh - 80px);
+        margin: 10px;
+    }
+    
+    .auth-section {
+        padding: 10px;
+    }
+    
+    .game-title {
+        font-size: 2rem;
+        margin-bottom: 15px;
+    }
+    
+    .auth-header h2 {
+        font-size: 1.4rem;
+        margin-bottom: 15px;
+    }
+    
+    .auth-header p {
+        margin-bottom: 15px;
+    }
+    
+    .form-group {
+        margin-bottom: 10px;
+    }
+    
+    .btn {
+        padding: 8px 16px;
+        margin: 5px 0;
+    }
+    
+    .btn-back {
+        margin: 8px auto 0 auto;
+        padding: 6px 12px;
+    }
+    
+    .social-buttons {
+        margin: 15px 0;
+    }
+    
+    .feature-list {
+        display: none; /* Hide features on small screens to save space */
+    }
+}
+
+/* Landscape orientation adjustments */
+@media (max-height: 600px) and (orientation: landscape) {
+    .welcome-modal {
+        max-height: calc(100vh - 20px);
+        margin: 10px auto;
+    }
+    
+    .auth-section {
+        padding: 15px;
+        overflow-y: auto;
+    }
+    
+    .game-title {
+        font-size: 2rem;
+        margin-bottom: 15px;
+    }
+    
+    .auth-header h2 {
+        font-size: 1.4rem;
+        margin-bottom: 15px;
+    }
+    
+    .auth-header p {
+        margin-bottom: 15px;
+    }
+    
+    .form-group {
+        margin-bottom: 10px;
+    }
+    
+    .btn {
+        padding: 8px 16px;
+        margin: 5px 0;
+    }
+    
+    .btn-back {
+        margin: 5px auto 0 auto;
+        padding: 6px 12px;
+        text-align: center;
+        display: block !important;
+    }
+    
+    .social-buttons {
+        margin: 15px 0;
+    }
+    
+    .feature-list {
+        display: none; /* Hide features in landscape to save space */
+    }
 }
 
 .btn:disabled {
