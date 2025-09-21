@@ -73,7 +73,7 @@ export class ApiService {
 
     constructor() {
         // Get base URL from environment or use default
-        this.baseURL = (typeof process !== 'undefined' && process.env?.USER_MANAGEMENT_URL) || 'http://localhost:8082';
+        this.baseURL = (typeof process !== 'undefined' && process.env?.USER_MANAGEMENT_URL) || 'http://localhost:8080';
         
         this.api = axios.create({
             baseURL: this.baseURL,

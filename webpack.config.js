@@ -106,7 +106,7 @@ module.exports = (env, argv) => {
         // Relaxed CSP for development to allow HMR and local requests
         'Content-Security-Policy': [
           "default-src 'self'",
-          "connect-src 'self' http://localhost:3200 ws://localhost:3200",
+          "connect-src 'self' http://localhost:3200 ws://localhost:3200 http://localhost:8080",
           "script-src 'self' 'unsafe-eval' 'unsafe-inline'",
           "style-src 'self' 'unsafe-inline'",
           "img-src 'self' data: blob:",

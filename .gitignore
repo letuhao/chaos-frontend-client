@@ -123,3 +123,4 @@ steam_settings/
 # Temporary files
 *.tmp
 *.temp
+package-lock.json
