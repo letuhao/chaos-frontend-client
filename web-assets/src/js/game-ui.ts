@@ -6,6 +6,7 @@
 // Import CSS files
 import '../css/welcome.css';
 import '../css/game.css';
+import '../css/password-strength.css';
 
 import { UnityBridge } from './unity-bridge';
 import { SteamIntegration } from './steam-integration';

@@ -5,6 +5,7 @@
 
 import { AuthFormData, AuthMode, LoginRequest, RegisterRequest } from '../../types/game-types';
 import { apiService } from '../services/api-service';
+import { PasswordStrengthIndicator } from '../password-strength';
 
 export class WelcomeScene {
     private elements: {
@@ -18,6 +19,7 @@ export class WelcomeScene {
     
     private currentMode: AuthMode = 'welcome';
     private isVisible: boolean = false;
+    private passwordStrengthIndicator?: PasswordStrengthIndicator;
     
     constructor() {
         this.initializeElements();
@@ -32,6 +34,32 @@ export class WelcomeScene {
         this.elements.registerForm = document.getElementById('register-form') as HTMLElement | undefined;
         this.elements.modeToggle = document.getElementById('auth-mode-toggle') as HTMLElement | undefined;
         this.elements.background = document.getElementById('welcome-background') as HTMLElement | undefined;
+        
+        // Initialize password strength indicator
+        this.initializePasswordStrengthIndicator();
+    }
+    
+    private initializePasswordStrengthIndicator(): void {
+        const passwordInput = document.getElementById('register-password') as HTMLInputElement;
+        const strengthContainer = document.getElementById('password-strength-container') as HTMLElement;
+        
+        if (passwordInput && strengthContainer) {
+            this.passwordStrengthIndicator = new PasswordStrengthIndicator(
+                passwordInput, 
+                strengthContainer
+            );
+            
+            // Show/hide indicator on focus/blur
+            passwordInput.addEventListener('focus', () => {
+                strengthContainer.classList.remove('hidden');
+            });
+            
+            passwordInput.addEventListener('blur', () => {
+                if (!passwordInput.value) {
+                    strengthContainer.classList.add('hidden');
+                }
+            });
+        }
     }
     
     private setupEventListeners(): void {
@@ -356,6 +384,15 @@ export class WelcomeScene {
     
     private async performRegister(authData: AuthFormData): Promise<void> {
         console.log('Attempting registration:', authData.username);
+        
+        // Validate password strength
+        if (this.passwordStrengthIndicator) {
+            const passwordValidation = this.passwordStrengthIndicator.getValidationResult();
+            if (!passwordValidation.isValid) {
+                this.showMessage('Password does not meet requirements:\n' + passwordValidation.errors.join('\n'), 'error');
+                return;
+            }
+        }
         
         // Validate passwords match
         if (authData.password !== authData.confirmPassword) {
